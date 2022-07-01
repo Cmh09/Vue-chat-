@@ -1,0 +1,95 @@
+<template>
+  <div v-show="ShowChat" class="Chat">
+    <div class="Chat-Messages">
+      <ul v-for="message in ChatMessages.slice().reverse()">
+        <li>{{ message }}</li>
+      </ul>
+    </div>
+
+    <div v-show="ShowChatInput" class="Chat-Input">
+      <input
+        class="input"
+        placeholder="Introdu mesajul .."
+        type="text"
+        v-model="ChatInputText"
+        v-on:keydown.enter="ChatAPI.Push"
+      />
+      <p class="Character-Counter">
+        {{ ChatInputText.length }}/{{ ChatMaxLenght }}
+      </p>
+    </div>
+  </div>
+</template>
+
+<script setup>
+// Utilizam vue 3 composition
+import { ref } from "vue"; //  Ref din vue
+
+const ChatMaxLenght = ref(120); //  Numarul maxim de carctere introduse in mesaj
+const ShowChat = ref(true); //  Daca este afist chatul
+const ShowChatInput = ref(true); //  Daca este afisat Input de la chat
+
+const ChatInputText = ref(""); //  Textul introdus
+const ChatMessages = ref([]); //  Toate mesajele din chat
+
+const ChatAPI = {
+  Push: () => {
+    ChatMessages.value.push(ChatInputText.value);
+  },
+};
+</script>
+
+<style scoped>
+.Chat {
+  width: 35vw;
+}
+.Chat-Messages {
+  width: 100%; /* setam continutul din chat la latime maxima  */
+  height: 30vh; /* setam inaltimea la chat la 30% din screen  */
+  overflow: hidden; /* ascundem scroll bar  */
+  overflow-y: scroll; /** setam doar scrol bar pe verticala sa fie afisat */
+  display: flex;
+  flex-direction: column-reverse;
+  direction: rtl;
+  background-color: rgba(0, 0, 0, 0.39);
+}
+.Chat-Messages > ul {
+  margin-left: 0.5vw;
+  list-style: none;
+  direction: ltr;
+}
+
+/* Chat input */
+.Chat-Input {
+  margin-top: 0.2vh;
+  width: 100%;
+  height: 3vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.input {
+  width: 100%;
+  height: 100%;
+  border: none;
+  outline: none;
+  background-color: rgba(0, 0, 0, 0);
+  color: white;
+  padding: 0.2vw;
+  font-size: 0.7vw;
+}
+
+.Chat-Input:hover {
+  background-color: black;
+}
+
+.Character-Counter {
+  width: fit-content;
+  height: auto;
+  margin-right: 0.2vw;
+  font-size: 0.7vw;
+  color: white;
+}
+</style>
